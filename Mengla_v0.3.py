@@ -246,7 +246,7 @@ def GUI():
 		# st.write(x, y)
 
 		# 第二步，将坐标位置关系，去数据库中各种信息
-		file = '/Users/xingchen/Documents/Arcgis/demo/result_simple_table.zip'
+		file = '/app/streamlit-app-mengla/result_simple_table.zip'
 		extract_information(file, x, y)
 
 		# 第三步，将找到的信息，进行建模，输出结果
