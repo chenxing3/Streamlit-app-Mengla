@@ -11,7 +11,7 @@ def MyInput(string, color):
 		color = '#f63366'
 	elif color == 'green':
 		color = '#09ab3b'
-	elif clor == 'grey':
+	elif color == 'grey':
 		color = '#f0f2f6'
 
 	st.markdown('<font color='+color+'>{}</font>'.format(string), unsafe_allow_html=True)
