@@ -205,7 +205,6 @@ def GUI():
 
 				if MengLa_range(float(latitude), float(longitude)): # Step 3, 判断是否在勐腊县范围
 					MyInput('数据导入成功', 'green')
-					return latitude, longitude
 				else:
 					pass
 					MyInput('您输入的经纬度不在数据库范围内，请重新输入！', 'red')
@@ -221,7 +220,6 @@ def GUI():
 
 				if MengLa_range(float(latitude), float(longitude)): # Step 3, 判断是否在勐腊县范围
 					MyInput('数据导入成功', 'green')
-					return latitude, longitude
 				else:
 					pass
 					MyInput('您输入的经纬度不在数据库范围内，请重新输入！', 'red')
