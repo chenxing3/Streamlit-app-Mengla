@@ -199,7 +199,6 @@ def GUI():
 		checking_decimal(latitude, longitude)
 	elif check_tmp(latitude_d, latitude_m) and check_tmp(longitude_d, longitude_m):
 		if check_tmp(latitude_s, longitude_s):
-			MyInput('输入的经度、纬度没有秒!！', 'red')
 			try:
 				latitude = dms_to_dec(int(latitude_d), int(latitude_m), float(latitude_s))
 				longitude = dms_to_dec(int(longitude_d), int(longitude_m), float(longitude_s))
@@ -215,6 +214,7 @@ def GUI():
 				pass
 				# MyInput('格式错误，请输入正确的经度、纬度!！', 'red')
 		else:
+			MyInput('提示：输入的经度、纬度没有秒!！', 'red')
 			try:
 				latitude = dms_to_dec(int(latitude_d), int(latitude_m), float(0))
 				longitude = dms_to_dec(int(longitude_d), int(longitude_m), float(0))
@@ -227,7 +227,7 @@ def GUI():
 					MyInput('您输入的经纬度不在数据库范围内，请重新输入！', 'red')
 
 			except ValueError: ## Step 2, 判断是否正确经纬度的形式，小数（浮点数）
-				MyInput('格式错误，请输入正确的经度、纬度!！', 'red')	
+				MyInput('格式错误，请输入正确的经度、纬度!！', 'red')
 
 
 	else:
