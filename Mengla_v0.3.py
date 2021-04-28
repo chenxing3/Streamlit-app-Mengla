@@ -133,6 +133,7 @@ def ToID(x, y, row_number=4676):
 
 def extract_information(file, x, y):
 	myzip = ZipFile(file)
+	flag = 0
 	# st.write(myzip)
 	# st.write(myzip.namelist()[0])
 	for record in myzip.open(myzip.namelist()[0]):
@@ -151,9 +152,11 @@ def extract_information(file, x, y):
 				st.write("最适宜")
 
 			myzip.close()
+			flag = 1
 			break
-		else:
-			st.write("数据库没有收录该地区信息")
+	if flag == 0:
+		st.write("数据库没有收录该地区信息")
+
 
 
 
