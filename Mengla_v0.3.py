@@ -302,7 +302,7 @@ def GUI():
 			initial_view_state=pdk.ViewState(
 				latitude = float(longitude),
 				longitude = float(latitude),
-				zoom=11,
+				zoom=12,
 				pitch=50,
 			),
 			layers=[
