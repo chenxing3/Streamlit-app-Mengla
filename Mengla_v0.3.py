@@ -3,6 +3,8 @@
 import streamlit as st
 from pyproj import Proj, transform
 from zipfile import ZipFile
+import pydeck as pdk
+import pandas as pd
 
 def MyInput(string, color):
 	if color == 'red':
@@ -10,7 +12,7 @@ def MyInput(string, color):
 	elif color == 'green':
 		color = '#09ab3b'
 	elif clor == 'grey':
-		color = ''
+		color = '#f0f2f6'
 
 	st.markdown('<font color='+color+'>{}</font>'.format(string), unsafe_allow_html=True)
 
@@ -142,27 +144,51 @@ def extract_information(file, x, y):
 		# st.write(ToID(x, y))
 		if ToID(x, y) == int(record_id):
 			# st.write(record_id, result)
+			print("")
+
 			if result == "1":
-				st.write("不适宜")
+				st.write("该地块的种植等级为: **_不适宜_**")
 			elif result == "2":
-				st.write("中适宜")
+				st.write("该地块的种植等级为: **_中适宜_**")
 			elif result == "3":
-				st.write("高适宜")			
+				st.write("该地块的种植等级为: **_高适宜_**")			
 			elif result == "4":
-				st.write("最适宜")
+				st.write("该地块的种植等级为: **_最适宜_**")
+
+			# st.write(':star:')
+			# st.write(record_id, elev_type, slope_type, aspect_type, result)
+			if elev_type == "0":
+				st.write("海拔: :star:", "不适宜")
+			else:
+				st.write("海拔: :star::star::star:  非常适宜")
+
+			if slope_type == "3":
+				st.write("坡度: :star:", "不适宜")
+			elif slope_type == "2":
+				st.write("坡度: :star::star:", "适宜")
+			else:
+				st.write("坡度: :star::star::star:非常适宜")
+
+			if slope_type == "1":
+				st.write("坡向: :star:", "不适宜")
+			elif slope_type == "2":
+				st.write("坡向: :star::star:", "适宜")
+			elif slope_type == "3" or "4":
+				st.write("坡向: :star::star::star:非常适宜")
 
 			myzip.close()
 			flag = 1
 			break
 	if flag == 0:
-		st.write("数据库没有收录该地区信息")
-
+		MyInput('数据库没有收录该地区信息', 'red')
 
 
 
 
 
 def GUI():
+
+
 	# 第一部分，数据导入部分：
 	st.header('用户输入数据或文件')
 
@@ -205,6 +231,7 @@ def GUI():
 
 				if MengLa_range(float(latitude), float(longitude)): # Step 3, 判断是否在勐腊县范围
 					MyInput('数据导入成功', 'green')
+					# return latitude, longitude
 				else:
 					pass
 					MyInput('您输入的经纬度不在数据库范围内，请重新输入！', 'red')
@@ -213,19 +240,20 @@ def GUI():
 				pass
 				# MyInput('格式错误，请输入正确的经度、纬度!！', 'red')
 		else:
-			MyInput('提示：输入的经度、纬度没有秒!！', 'red')
+			MyInput('提示：输入的经度、纬度没有秒!！', 'gray')
 			try:
 				latitude = dms_to_dec(int(latitude_d), int(latitude_m), float(0))
 				longitude = dms_to_dec(int(longitude_d), int(longitude_m), float(0))
 
 				if MengLa_range(float(latitude), float(longitude)): # Step 3, 判断是否在勐腊县范围
 					MyInput('数据导入成功', 'green')
+					# return latitude, longitude
 				else:
 					pass
 					MyInput('您输入的经纬度不在数据库范围内，请重新输入！', 'red')
 
 			except ValueError: ## Step 2, 判断是否正确经纬度的形式，小数（浮点数）
-				MyInput('格式错误，请输入正确的经度、纬度!！', 'red')
+				MyInput('格式错误，请输入正确的经度、纬度!！', 'red')	
 
 
 	else:
@@ -247,7 +275,9 @@ def GUI():
 		# st.write(x, y)
 
 		# 第二步，将坐标位置关系，去数据库中各种信息
+		# file = '/Users/xingchen/Documents/Arcgis/demo/result_simple_table.zip'
 		file = '/app/streamlit-app-mengla/result_simple_table.zip'
+
 		extract_information(file, x, y)
 
 		# 第三步，将找到的信息，进行建模，输出结果
@@ -259,9 +289,40 @@ def GUI():
 		'''
 		)
 
+		
+
+		df = pd.DataFrame({
+			'awesome cities' : ['所选区域'],
+			'lon' : [float(latitude)],
+			'lat' : [float(longitude)]
+		})
+		MyInput('所选地块', 'green')
+		st.pydeck_chart(pdk.Deck(
+			map_style='mapbox://styles/mapbox/light-v9',
+			initial_view_state=pdk.ViewState(
+				latitude = float(longitude),
+				longitude = float(latitude),
+				zoom=11,
+				pitch=50,
+			),
+			layers=[
+				pdk.Layer(
+					'ScatterplotLayer',
+					data=df,
+					get_position='[lon, lat]',
+					get_color='[200, 30, 0, 160]',
+					get_radius=100,
+				),
+			],
+		))
 
 
 
+
+# print(df)
+# 21.9205593,101.2730076
+
+# 21.9227888,101.2414649
 
 if __name__ == '__main__':
 	# print("I am here!!")
